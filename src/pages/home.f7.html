@@ -8,11 +8,11 @@
 						<h6>Break The Language Barrier</h6>
 						<div class="separator-small"></div>
 						<div class="content-form">
-							<form action="#">
+							<form>
 								<input type="hidden" id="iso">
 								<input id="autocomplete-dropdown-ajax" type="text" placeholder="Search Language" autocomplete="off">
 								<textarea cols="30" rows="5" id="words" placeholder="Write Something. . . ."></textarea>
-								<button class="buttons buttons-center" @click="resultTranslate">Translate</button>
+								<button class="buttons buttons-center" type="button" @click="resultTranslate">Translate</button>
 							</form>
 						</div>
 						{{#if result}}
