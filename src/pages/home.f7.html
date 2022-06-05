@@ -1,0 +1,129 @@
+<template>
+	<div class="page no-navbar">
+		<div class="page-content">
+			<div class="blog segments-page">
+				<div class="container">
+					<div class="post-comments">
+						<h3>Neutrans — Translator</h3>
+						<h6>Break The Language Barrier</h6>
+						<div class="separator-small"></div>
+						<div class="content-form">
+							<form action="#">
+								<input type="hidden" id="iso">
+								<input id="autocomplete-dropdown-ajax" type="text" placeholder="Search Language" autocomplete="off">
+								<textarea cols="30" rows="5" id="words" placeholder="Write Something. . . ."></textarea>
+								<button class="buttons buttons-center" @click="resultTranslate">Translate</button>
+							</form>
+						</div>
+						{{#if result}}
+						<div class="separator-small"></div>
+						<div class="content-form">
+							<form action="#">
+								<textarea cols="30" rows="5" disabled="" placeholder="Translation Result. . . .">{{ result.result }}</textarea>
+							</form>
+						</div>
+						{{else}}
+						{{/if}}
+						<div class="separator"></div>
+						<div class="follow-us">
+							<h6>Give some ❤️ by starring of my repositories!</h6>
+							<ul>
+								<li>
+									<a href="https://github.com/RizkiKarianata"><span class="socmed-bg-github">
+										<i class="fab fa-github"></i>
+									</span></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="separator"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+<script>
+	export default{
+		mounted() {
+			var $this = this;
+			var app = this.$app;
+			var $$ = this.$$;
+			var self = this;
+		},
+		methods: {
+			resultTranslate: function() {
+				var $this = this;
+				var app = this.$app;
+				var $$ = this.$$;
+				var self = this;
+
+				var response = new Array();
+
+				var iso = $$('#iso').val();
+				var words = $$('#words').val();
+
+				if (iso == "" || words == "") {
+					app.dialog.alert("There is an empty input field", 'Warning')
+				}else {
+					app.request.get('https://amm-api-translate.herokuapp.com/translate?engine=google&text='+words+'&to='+iso, function (data, status, xhr) {
+						response = JSON.parse(data);
+						app.dialog.preloader();
+						setTimeout(function () {
+							self.$setState({
+								result: response.data
+							});
+							app.dialog.close();
+						}, 3000);
+					});
+				}
+			}  
+		},
+		on: {
+			pageInit: function () {
+				var self = this;
+				var $this = this;
+				var app = this.$app;
+				var $$ = this.$$;
+
+				var autocompleteDropdownAjax = app.autocomplete.create({
+					inputEl: '#autocomplete-dropdown-ajax',
+					openIn: 'dropdown',
+					preloader: true,
+					valueProperty: 'bahasa',
+					textProperty: 'bahasa',
+					limit: 10,
+					source: function (query, render) {
+						var autocomplete = this;
+						var results = [];
+						if (query.length === 0) {
+							render(results);
+							return;
+						}
+						autocomplete.preloaderShow();
+
+						app.request({
+							url: 'static/js/language.json',
+							method: 'GET',
+							dataType: 'json',
+							data: {
+								query: query,
+							},
+							success: function (data) {
+								for (var i = 0; i < data.length; i++) {
+									if (data[i].bahasa.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+								}
+								autocomplete.preloaderHide();
+								render(results);
+							}
+						});
+					},
+					on: {
+						change: function (value) {
+							document.getElementById("iso").value = value[0].iso;
+						}
+					}
+				});
+			},
+		}
+	}
+</script>
