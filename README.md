@@ -65,6 +65,7 @@ Download the latest project release from the [Release Page](https://github.com/R
 * [Apache Cordova](https://cordova.apache.org/)
 * [Node.js](https://nodejs.org/en/)
 * [API Translate](https://github.com/azharimm/api-translate)
+* [Download Neutrans - Mediafire](https://www.mediafire.com/file/hnsbck9bixyqmtz/Neutrans.apk/file)
 * Did you build a framework or other features? Open up Pull Requests and put yours here! 😃
 
 ## 📆 Release Date
